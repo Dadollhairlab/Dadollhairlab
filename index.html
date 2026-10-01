@@ -181,8 +181,16 @@ $("booking").addEventListener("submit",async e=>{
  if(!selectedDate||!selectedTime){alert("Please choose an available date and time.");return}
  $("formDate").value=pretty(selectedDate);$("formTime").value=selectedTime;
  const form=e.currentTarget;
- const key=form.querySelector('input[name="access_key"]').value;
- if(!key || key === "6b02cde9-c93a-446a-a4e0-6b8befc438ae"){alert("Please add your Web3Forms Access Key before testing the booking form.");return}
+ // Web3Forms access key is included in this published static site.
+ // Re-set it here so the form still works even if the hidden field is altered by a cached copy.
+ const accessKey="6b02cde9-c93a-446a-a4e0-6b8befc438ae";
+ const keyField=form.querySelector('input[name="access_key"]');
+ if(keyField) keyField.value=accessKey;
+ else {
+   const hidden=document.createElement("input");
+   hidden.type="hidden"; hidden.name="access_key"; hidden.value=accessKey;
+   form.appendChild(hidden);
+ }
  const submit=form.querySelector('button[type="submit"]');
  submit.disabled=true; submit.textContent="SENDING...";
  try{
